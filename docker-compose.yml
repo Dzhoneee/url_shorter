@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: short_urls_db
+
+    environment: 
+      POSTGRES_USER: short_urls
+      POSTGRES_PASSWORD: hah(32)+kjuP
+      POSTGRES_DB: short_urls
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
