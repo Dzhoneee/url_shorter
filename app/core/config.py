@@ -8,5 +8,7 @@ class Settings:
     database_port = 5432
     database_name = "short_urls"
 
+    CODE_LENGTH = 6
+
 
 settings = Settings()
