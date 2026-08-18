@@ -1,5 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import RedirectResponse
 from app.schemas.url import CreateShortUrlRequest
+from app import dependencies as dp
+from app.services.short_url_service import ShortURLService
+from app.db.models.short_url import ShortURL
+
 
 
 router = APIRouter()
@@ -11,9 +16,19 @@ def root():
 
 
 @router.post("/urls")
-def create_short_url(request: CreateShortUrlRequest):
+def create_short_url(request: CreateShortUrlRequest, 
+                     service: ShortURLService = Depends(dp.get_short_url_service)):
+    created_url: ShortURL = service.create_short_url(request.url)
     return {
-        "original_url": request.url,
-        "short_code": "abcdef",
-        "short_url": f"http://localhost:8000/abcdef"
+        "original_url": created_url.original_url,
+        "short_code": created_url.short_code,
+        "short_url": f"http://localhost:8000/" + created_url.short_code
     }
+
+@router.get("/{short_code}")
+def redirection(short_code: str,
+                service: ShortURLService = Depends(dp.get_short_url_service)):
+    url: ShortURL | None = service.repository.get_by_short_code(short_code)
+    if url is None:
+        raise HTTPException(status_code=404, detail="Link not found")
+    return RedirectResponse(url=url.original_url, status_code=307)

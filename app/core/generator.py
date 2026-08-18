@@ -1,6 +1,6 @@
 import secrets
 import string
-from config import settings
+from app.core.config import settings
 
 
 def generate_code() -> str:

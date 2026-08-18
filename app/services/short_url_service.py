@@ -8,6 +8,8 @@ class ShortURLService:
         self.repository = repository
 
     def create_short_url(self, original_url: str) -> ShortURL:
+        if not original_url.startswith(("http://", "https://")):
+            original_url = "http://" + original_url
         existing_url = self.repository.get_by_original_url(original_url)
         if existing_url is not None:
             return existing_url
