@@ -22,7 +22,7 @@ def create_short_url(request: CreateShortUrlRequest,
     return {
         "original_url": created_url.original_url,
         "short_code": created_url.short_code,
-        "short_url": f"http://localhost:8000/" + created_url.short_code
+        "short_url": f"http://192.168.1.17:8000/" + created_url.short_code
     }
 
 @router.get("/{short_code}")
